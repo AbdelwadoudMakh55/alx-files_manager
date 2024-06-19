@@ -11,7 +11,7 @@ function sha1(data) {
 export async function getConnect(req, res) {
   const { authorization } = req.headers;
   const auth = authorization.split(' ')[1];
-  const credentials = Buffer.from(auth, 'base64').toString('binary');
+  const credentials = Buffer.from(auth, 'base64').toString();
   const email = credentials.split(':')[0];
   const password = credentials.split(':')[1];
   const users = dbClient.db.collection('users');
