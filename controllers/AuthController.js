@@ -12,7 +12,7 @@ export async function getConnect(req, res) {
   const users = dbClient.db.collection('users');
   const hashedPwd = sha1(password);
   const user = await users.findOne({ email, password: hashedPwd });
-  if (!user) {
+  if (user == null) {
     return res.status(401).send({ error: 'Unauthorized' });
   }
   const token = uuidv4();
@@ -23,7 +23,7 @@ export async function getConnect(req, res) {
 export async function getDisconnect(req, res) {
   const token = req.headers['x-token'];
   const user = await redisClient.get(`auth_${token}`);
-  if (!user) {
+  if (user === null) {
     return res.status(401).send({ error: 'Unauthorized' });
   }
   await redisClient.del(`auth_${token}`);

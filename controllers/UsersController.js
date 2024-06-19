@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db';
-import RedisClient from '../utils/redis';
+import redisClient from '../utils/redis';
 
 export function sha1(data) {
   const generator = crypto.createHash('sha1');
@@ -34,8 +34,8 @@ export async function postNew(req, res) {
 }
 export async function getMe(req, res) {
   const token = req.headers['x-token'];
-  const userId = await RedisClient.get(`auth_${token}`);
-  if (!userId) {
+  const userId = await redisClient.get(`auth_${token}`);
+  if (userId === null) {
     return res.status(401).send({ error: 'Unauthorized' });
   }
   const userObjectId = new ObjectId(userId);
