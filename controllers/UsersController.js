@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import sha1 from 'sha1';
 import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
