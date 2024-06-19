@@ -20,7 +20,7 @@ export default async function postNew(req, res) {
   const users = dbClient.db.collection('users');
   const user = await users.findOne({ email });
   if (user) {
-    return res.status(400).send({ error: 'Already exists' });
+    return res.status(400).send({ error: 'Already exist' });
   }
   const hashedPwd = sha1(password);
   const newUser = await users.insertOne({ email, password: hashedPwd });
