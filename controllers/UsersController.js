@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
-function sha1(data) {
+export function sha1(data) {
   const generator = crypto.createHash('sha1');
   generator.update(data);
   return generator.digest('hex');
