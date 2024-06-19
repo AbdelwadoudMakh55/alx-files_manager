@@ -1,8 +1,13 @@
+import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
-import { sha1 } from './UsersController';
 
+function sha1(data) {
+  const generator = crypto.createHash('sha1');
+  generator.update(data);
+  return generator.digest('hex');
+}
 export async function getConnect(req, res) {
   const { authorization } = req.headers;
   const auth = authorization.split(' ')[1];
@@ -17,7 +22,7 @@ export async function getConnect(req, res) {
   }
   const token = uuidv4();
   const key = `auth_${token}`;
-  await redisClient.set(key, user._id, 86400);
+  await redisClient.set(key, user._id.toString(), 86400);
   return res.status(200).send({ token });
 }
 export async function getDisconnect(req, res) {

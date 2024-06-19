@@ -3,12 +3,11 @@ import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
-export function sha1(data) {
+function sha1(data) {
   const generator = crypto.createHash('sha1');
   generator.update(data);
   return generator.digest('hex');
 }
-
 export async function postNew(req, res) {
   const { email } = req.body;
   const { password } = req.body;
