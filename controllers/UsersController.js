@@ -35,7 +35,7 @@ export async function postNew(req, res) {
 export async function getMe(req, res) {
   const token = req.headers['x-token'];
   const userId = await RedisClient.get(`auth_${token}`);
-  if (userId === null) {
+  if (!userId) {
     return res.status(401).send({ error: 'Unauthorized' });
   }
   const userObjectId = new ObjectId(userId);
