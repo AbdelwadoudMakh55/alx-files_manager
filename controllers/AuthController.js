@@ -1,13 +1,7 @@
-import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
-function sha1(data) {
-  const generator = crypto.createHash('sha1');
-  generator.update(data);
-  return generator.digest('hex');
-}
 export async function getConnect(req, res) {
   const { authorization } = req.headers;
   const auth = authorization.split(' ')[1];
@@ -15,8 +9,7 @@ export async function getConnect(req, res) {
   const email = credentials.split(':')[0];
   const password = credentials.split(':')[1];
   const users = dbClient.db.collection('users');
-  const hashedPwd = sha1(password);
-  const user = await users.findOne({ email, password: hashedPwd });
+  const user = await users.findOne({ email, password });
   if (user === null) {
     return res.status(401).send({ error: 'Unauthorized' });
   }
