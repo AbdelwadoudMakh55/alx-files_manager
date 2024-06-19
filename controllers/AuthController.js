@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
-import { sha1 } from './controllers/UsersController';
+import { sha1 } from '../controllers/UsersController';
 
 export async function getConnect(req, res) {
   const { authorization } = req.headers;
