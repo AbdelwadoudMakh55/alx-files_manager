@@ -44,7 +44,7 @@ export default async function postUpload(req, res) {
       name,
       type,
       isPublic,
-      parentId,
+      parentId: ObjectId(parentId),
     };
     const newFolderDb = await files.insertOne(newFile);
     const response = {
@@ -65,7 +65,7 @@ export default async function postUpload(req, res) {
     name,
     type,
     isPublic,
-    parentId,
+    parentId: ObjectId(parentId),
     localPath,
   };
   const dataUtf8 = Buffer.from(data, 'base64').toString();
