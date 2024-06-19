@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
-import { sha1 } from '../controllers/UsersController'
+import { sha1 } from './UsersController';
 
 export async function getConnect(req, res) {
   const { authorization } = req.headers;
   const auth = authorization.split(' ')[1];
-  const credentials = Buffer.from(auth, 'base64').toString('ascii');
+  const credentials = Buffer.from(auth, 'base64').toString();
   const email = credentials.split(':')[0];
   const password = credentials.split(':')[1];
   const users = dbClient.db.collection('users');
@@ -17,7 +17,7 @@ export async function getConnect(req, res) {
   }
   const token = uuidv4();
   const key = `auth_${token}`;
-  await redisClient.set(key, user._id.toString(), 86400);
+  await redisClient.set(key, user._id, 86400);
   return res.status(200).send({ token });
 }
 export async function getDisconnect(req, res) {
