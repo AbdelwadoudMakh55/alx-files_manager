@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import sha1 from 'sha1';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
@@ -7,7 +8,7 @@ export async function getConnect(req, res) {
   const auth = authorization.split(' ')[1];
   const credentials = Buffer.from(auth, 'base64').toString();
   const email = credentials.split(':')[0];
-  const password = credentials.split(':')[1];
+  const password = sha1(credentials.split(':')[1]);
   const users = dbClient.db.collection('users');
   const user = await users.findOne({ email, password });
   if (user === null) {
