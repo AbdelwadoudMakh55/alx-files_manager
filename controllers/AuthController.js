@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import dbClient from '../utils/db';
-import RedisClient from '../utils/redis';
+import redisClient from '../utils/redis';
 
 export async function getConnect(req, res) {
   const { authorization } = req.headers;
@@ -15,15 +15,15 @@ export async function getConnect(req, res) {
   }
   const token = uuidv4();
   const key = `auth_${token}`;
-  await RedisClient.set(key, user._id, 86400);
+  await redisClient.set(key, user._id, 86400);
   return res.status(200).send({ token });
 }
 export async function getDisconnect(req, res) {
   const token = req.headers['x-token'];
-  const user = await RedisClient.get(`auth_${token}`);
+  const user = await redisClient.get(`auth_${token}`);
   if (user === null) {
     return res.status(401).send({ error: 'Unauthorized' });
   }
-  await RedisClient.del(`auth_${token}`);
+  await redisClient.del(`auth_${token}`);
   return res.status(204).send();
 }
