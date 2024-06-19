@@ -14,7 +14,7 @@ export default async function postUpload(req, res) {
   const { name } = req.body;
   const { type } = req.body;
   const parentId = req.body.parentId || 0;
-  const { isPublic } = req.body || false;
+  const isPublic = req.body.isPublic || false;
   const { data } = req.body;
 
   if (!name) {
@@ -40,7 +40,7 @@ export default async function postUpload(req, res) {
   const files = dbClient.db.collection('files');
   if (type === 'folder') {
     const newFile = {
-      userId,
+      userId: ObjectId(userId),
       name,
       type,
       isPublic,
@@ -61,7 +61,7 @@ export default async function postUpload(req, res) {
   const fileName = uuidv4();
   const localPath = `${path}/${fileName}`;
   const newFile = {
-    userId,
+    userId: ObjectId(userId),
     name,
     type,
     isPublic,
