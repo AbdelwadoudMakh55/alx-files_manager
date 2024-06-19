@@ -1,5 +1,7 @@
 import crypto from 'crypto';
+import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db';
+import RedisClient from '../utils/redis';
 
 function sha1(data) {
   const generator = crypto.createHash('sha1');
@@ -7,7 +9,7 @@ function sha1(data) {
   return generator.digest('hex');
 }
 
-export default async function postNew(req, res) {
+export async function postNew(req, res) {
   const { email } = req.body;
   const { password } = req.body;
 
@@ -29,4 +31,19 @@ export default async function postNew(req, res) {
     email: newUser.ops[0].email,
   };
   return res.status(201).send(response);
+}
+export async function getMe(req, res) {
+  const token = req.headers['x-token'];
+  const userId = await RedisClient.get(`auth_${token}`);
+  if (userId === null) {
+    return res.status(401).send({ error: 'Unauthorized' });
+  }
+  const userObjectId = new ObjectId(userId);
+  const users = dbClient.db.collection('users');
+  const userDb = await users.findOne({ _id: userObjectId });
+  const response = {
+    id: userDb._id,
+    email: userDb.email,
+  };
+  return res.send(response);
 }
