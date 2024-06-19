@@ -1,15 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
-import { sha1 } from '../controllers/UsersController';
+import { sha1 } from '../controllers/UsersController'
 
 export async function getConnect(req, res) {
   const { authorization } = req.headers;
-  if (!authorization || !authorization.startsWith('Basic ')) {
-    return res.status(401).send({ error: 'Unauthorized' });
-  }
   const auth = authorization.split(' ')[1];
-  const credentials = Buffer.from(auth, 'base64').toString();
+  const credentials = Buffer.from(auth, 'base64').toString('ascii');
   const email = credentials.split(':')[0];
   const password = credentials.split(':')[1];
   const users = dbClient.db.collection('users');
